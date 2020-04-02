@@ -1,0 +1,13 @@
+{{ #dotenv }}
+require('dotenv').config();
+{{ /dotenv }}
+const { App } = require('@slack/bolt');
+{{ #hasPayloads }}
+const payloads = require('./payloads');
+{{ /hasPayloads }}
+
+// Initializes your app with your bot token and signing secret
+const app = new App({
+  token: process.env.SLACK_TOKEN,
+  signingSecret: process.env.SLACK_SIGNING_SECRET
+});

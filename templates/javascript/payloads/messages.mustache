@@ -1,0 +1,30 @@
+module.exports = {
+  hello: context => {
+    return [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `:wave: Hello <@${context.user}>!`
+        }
+      }
+      {{ #modals }}
+      ,{
+          "type": "actions",
+          "elements": [
+            {
+              "action_id": "hello_action",
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Open Modal",
+                "emoji": true
+              },
+              "value": "click_me_123"
+            }
+          ]
+        }
+      {{ /modals }}
+    ];
+  }
+};

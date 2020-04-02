@@ -1,0 +1,33 @@
+module.exports = {
+  home: context => {
+    return {
+      type: "home",
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `:rainbow: Hello <@${context.user}>!`
+          }
+        }
+        {{ #modals }}
+        ,{
+          "type": "actions",
+          "elements": [
+            {
+              "action_id": "hello_action",
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Open Modal",
+                "emoji": true
+              },
+              "value": "click_me_123"
+            }
+          ]
+        }
+        {{ /modals }}
+      ]
+    };
+  }
+};

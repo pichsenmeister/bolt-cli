@@ -1,0 +1,11 @@
+app.action("hello_action", async ({ ack, action, body, context }) => {
+  ack();
+  console.log(action)
+  {{ #modals }}
+  await app.client.views.open({
+    token: context.botToken,
+    trigger_id: body.trigger_id,
+    view: payloads.modals.hello(body.user.id)
+  })
+  {{ /modals }}
+});

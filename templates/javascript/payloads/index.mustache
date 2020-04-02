@@ -1,0 +1,9 @@
+{{ #payloads }}
+const {{ . }} = require('./{{ . }}')
+{{ /payloads }}
+
+module.exports = {
+    {{ #payloads }}
+        {{ . }},
+    {{ /payloads }}
+}
