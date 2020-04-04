@@ -1,5 +1,12 @@
 app.shortcut("hello_shortcut", async ({ ack, context, body }) => {
-  ack();
-
-  console.log(body)
+  await ack();
+  console.log(body);
+  
+  {{ #modals }}
+  await app.client.views.open({
+    token: context.botToken,
+    trigger_id: body.trigger_id,
+    view: payloads.modals.hello(body.user.id)
+  })
+  {{ /modals }}
 });

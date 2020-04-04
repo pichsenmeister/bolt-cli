@@ -1,1 +1,7 @@
-// slash command
+app.command('/echo', async ({ command, ack, respond }) => {
+  // Acknowledge command request
+  await ack();
+  console.log(command);
+
+  await respond(`${command.text}`);
+});

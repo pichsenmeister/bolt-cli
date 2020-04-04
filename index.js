@@ -1,4 +1,5 @@
-'use strict';
+#!/usr/bin/env node
+
 // const { program } = require('commander');
 
 const commands = require('./commands')
@@ -20,7 +21,7 @@ const start = async (argv) => {
         commands.create(argv.slice(2))
         break;
       default:
-        console.log('help')  
+        console.log('>> Usage: bolt-cli create')  
     }
 }
 

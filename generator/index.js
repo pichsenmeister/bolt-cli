@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const mustache = require('mustache')
+const prettier = require("prettier")
 
 // name => package.json
 // events_api => components/event
@@ -23,11 +24,7 @@ const getTemplate = (config, name) => {
     return fs.readFileSync(path.normalize(__dirname+`/../templates/${config.language}/${name}`), 'utf8')
 }
 
-
 const generate = (config) => {
-
-    console.log(config)
-
     const templateConfig = require(`../templates/${config.language}/config`)
     templateConfig.dependencies.forEach(dep => {
         if(config.components.indexOf(dep.component) >= 0) {
@@ -44,6 +41,8 @@ const generate = (config) => {
         }
     })
 
+    // add all config variables to mustache vars 
+    // and flatten all arrays
     config.view = config
     config.components.forEach(comp => {
         config.view[comp] = true
@@ -51,11 +50,10 @@ const generate = (config) => {
     config.apis.forEach(api => {
         config.view[api] = true
     })
+    // some features / components have dependencies, add them here
     config.dependencies.forEach(dep => {
         config.view[dep] = true
     })
-
-    console.log(config)
     
     if (fs.existsSync(config.dir)){
         console.error(`${config.dir} already exists.`)
@@ -64,43 +62,54 @@ const generate = (config) => {
 
     fs.mkdirSync(config.dir);
 
-    generatePayloads(config)
-    generateApp(config)
+    generatePayloads(config, templateConfig)
+    generateApp(config, templateConfig)
     
 
     switch(config.language) {
         case 'javascript':
         case 'typescript':
-            generateFile(config, 'package.mustache', 'package.json', config.view)
-            if(config.dependencies && config.dependencies.indexOf('dotenv') >= 0) generateFile(config, 'env.mustache', '.env', config.view)
+            generateFile(config, 'package.mustache', 'package.json', config.view, false)
+            if(config.dependencies && config.dependencies.indexOf('dotenv') >= 0) generateFile(config, 'env.mustache', '.env', config.view, false)
             break
     }
 }
 
-const generateApp = (config) => {
+const generateApp = (config, templateConfig) => {
     const contents = getTemplate(config, 'app.mustache')
 
     const partials = {
         app_init: getTemplate(config, 'app/app-init.mustache'),
         app_start: getTemplate(config, 'app/app-start.mustache')
     }
+
+    config.components.concat(config.apis).forEach(comp => {
+        if(templateConfig.templates[comp])
+            partials[comp] = getTemplate(config, templateConfig.templates[comp])
+    })
     
-    const output = mustache.render(contents, config.view, partials);
+    let output = mustache.render(contents, config.view, partials);
+    if(config.language === 'javascript') {
+        output = prettier.format(output, {parser: 'babel'})
+    }
     const appPath = path.join(config.dir, fileName[config.language])
     fs.writeFileSync(appPath, output, (error) => console.error(error))
 }
 
-const generateFile = (config, template, fileName, view) => {
+const generateFile = (config, template, fileName, view, parse) => {
+    parse = parse || false
     const contents = getTemplate(config, template)
-    const output = mustache.render(contents, view);
+    let output = mustache.render(contents, view);
+    if(config.language === 'javascript' && parse) {
+        output = prettier.format(output, {parser: 'babel'})
+    }
     const filePath = path.join(config.dir, fileName)
     fs.writeFileSync(filePath, output, (error) => console.error(error))
 }
 
-const generatePayloads = (config) => {
+const generatePayloads = (config, templateConfig) => {
     fs.mkdirSync(path.join(config.dir, 'payloads'));
 
-    const templateConfig = require(`../templates/${config.language}/config`)
     const view = {}
     config.components.forEach(comp => {
         view[comp] = true
@@ -113,12 +122,12 @@ const generatePayloads = (config) => {
     for(const payload in templateConfig.payloads) {
         if(view[payload]) {
             config.payloads.push(templateConfig.payloads[payload].replace('payloads/', '').replace('.mustache', ''))
-            generateFile(config, templateConfig.payloads[payload], templateConfig.payloads[payload].replace('mustache', 'js'), view)
+            generateFile(config, templateConfig.payloads[payload], templateConfig.payloads[payload].replace('mustache', 'js'), view, true)
         }
     }
     config.hasPayloads = config.payloads.length ? true : false
 
-    if(config.hasPayloads) generateFile(config, 'payloads/index.mustache', 'payloads/index.js', { payloads: config.payloads })
+    if(config.hasPayloads) generateFile(config, 'payloads/index.mustache', 'payloads/index.js', { payloads: config.payloads }, true)
 }
 
 module.exports = {

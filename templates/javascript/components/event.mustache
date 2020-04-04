@@ -1,12 +1,12 @@
 /**
 app_home_opened listener for home tab and messages tab in app home
 **/
-app.event("{{ event }}", async ({ event, body, context }) => {
+app.event("app_home_opened", async ({ event, body, context }) => {
   console.log(event);
 
   {{ #app_home }}  
     if (event.tab === "home") {
-        return app.client.views.publish({
+        return await app.client.views.publish({
         token: context.botToken,
         user_id: event.user,
         view: payloads.home.home({user: event.user})
@@ -16,7 +16,7 @@ app.event("{{ event }}", async ({ event, body, context }) => {
 
   {{ #app_dm }}  
   if (event.tab === "messages") {
-    return app.client.chat.postMessage({
+    return await app.client.chat.postMessage({
       token: context.botToken,
       channel: event.channel,
       blocks: payloads.messages.hello({user: event.user})

@@ -23,22 +23,41 @@ module.exports = {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `:sparkles: Hello ${context.user}!`
+            text: `:sparkles: Hello <@${context.user}>!`
           }
         },
         {
-			block_id: "text_input",
-            type: "input",
-			element: {
-                action_id: "data",
-				type: "plain_text_input"
-			},
-			label: {
-				type: "plain_text",
-				text: "Label",
-				emoji: true
-			}
-		}
+			    block_id: "text_input",
+          type: "input",
+			    element: {
+            action_id: "data",
+				    type: "plain_text_input"
+			    },
+			    label: {
+				    type: "plain_text",
+				    text: "Text input",
+				    emoji: true
+			    }
+		    }
+        {{ #external_select }}
+        ,{
+            "type": "input",
+            "element": {
+              "action_id": "external_select",
+              "type": "external_select",
+              "placeholder": {
+                "type": "plain_text",
+                "text": "Start typing",
+                "emoji": true
+              }
+            },
+            "label": {
+              "type": "plain_text",
+              "text": "External select",
+              "emoji": true
+            }
+        }
+        {{ /external_select }}
       ]
     };
   }

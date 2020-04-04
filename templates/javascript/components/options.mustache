@@ -1,1 +1,13 @@
-// options
+app.options('external_select', async ({ options, ack }) => {
+    await ack({
+        options: [
+          {
+            text: {
+              type: "plain_text",
+              text: options.value
+            },
+            value: options.value
+          }
+        ]
+    });
+});

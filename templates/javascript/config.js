@@ -16,17 +16,13 @@ const config = {
         app_dm: "payloads/messages.mustache",
         modals: "payloads/modals.mustache" 
     },
-    components: {
-        app_home: "components/event",
-        app_dm: "components/event",
-        modals: "components/view",
-        slash_commands: "features/slash-command",
-        shortcuts: "features/shortcut",
-        external_select: "components/options"
-    },
-    apis: {
-        interactivity: "components/action",
-        events_api: "components/event"
+    templates: {
+        modals: "components/view.mustache",
+        slash_commands: "features/slash-command.mustache",
+        shortcuts: "features/shortcut.mustache",
+        external_select: "components/options.mustache",
+        interactivity: "components/action.mustache",
+        events_api: "components/event.mustache"
     },
     dependencies: [
         {
@@ -37,6 +33,14 @@ const config = {
             component: 'shortcuts',
             apis: ['interactivity'],
             components: ['modals']
+        },
+        {
+            component: 'app_home',
+            apis: ['events_api']
+        },
+        {
+            component: 'app_dm',
+            apis: ['events_api']
         }
     ]
 }

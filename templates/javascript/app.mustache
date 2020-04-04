@@ -1,11 +1,27 @@
 {{ > app_init }}
 
-{{ #features }}
-    {{&.}}
-{{ /features }}
+{{ #events_api }}
+    {{ > events_api }}
+{{ /events_api }}
 
-{{ #components }}
-    {{&.}}
-{{ /components }}
+{{ #interactivity }}
+    {{ > interactivity }}
+{{ /interactivity }}
+
+{{ #modals }}
+    {{ > modals }}
+{{ /modals }}
+
+{{ #shortcuts }}
+    {{ > shortcuts }}
+{{ /shortcuts }}
+
+{{ #slash_commands }}
+    {{ > slash_commands }}
+{{ /slash_commands }}
+
+{{ #external_select }}
+    {{ > external_select }}
+{{ /external_select }}
 
 {{ > app_start }}

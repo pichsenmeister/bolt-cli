@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+
 const create = (config) => {
   return [
     {
@@ -7,6 +10,13 @@ const create = (config) => {
       validate: (text) => {
         if (!text.match(/^[A-Za-z0-9\-_]+$/)) {
           return 'Please use only alphanumeric characters, - or _';
+        }
+
+        const currentPath = process.cwd()
+        const dir = path.join(currentPath, text)
+
+        if (fs.existsSync(dir)) {
+          return `${dir} already exists. Please choose a different name.`
         }
   
         return true;
@@ -71,10 +81,10 @@ const create = (config) => {
           "name": "Javascript",
           "value": "javascript"
         },
-        {
-          "name": "Typescript",
-          "value": "typescript"
-        }
+        // {
+        //   "name": "Typescript",
+        //   "value": "typescript"
+        // }
       ]
     },
     // dependencies
