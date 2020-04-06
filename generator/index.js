@@ -73,6 +73,8 @@ const generate = (config) => {
             if(config.dependencies && config.dependencies.indexOf('dotenv') >= 0) generateFile(config, 'env.mustache', '.env', config.view, false)
             break
     }
+
+    console.log(`${config.name} successfully generated in ${config.dir}`)
 }
 
 const generateApp = (config, templateConfig) => {

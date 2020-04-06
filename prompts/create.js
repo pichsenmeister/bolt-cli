@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const create = (config) => {
+const create = (defaults) => {
   return [
     {
       type: 'input',
@@ -21,7 +21,7 @@ const create = (config) => {
   
         return true;
       },
-      default: config.projectName
+      default: defaults.name
     },
     // features
     {
@@ -37,7 +37,8 @@ const create = (config) => {
           "name": "Interactivity & Shortcuts",
           "value": "interactivity"
         }
-      ]
+      ],
+      default: defaults.apis
     },
     //components
     {
@@ -69,7 +70,8 @@ const create = (config) => {
           "name": "External select menus",
           "value": "external_select"
         }
-      ]
+      ],
+      default: defaults.components
     },
     // language
     {
@@ -85,7 +87,8 @@ const create = (config) => {
         //   "name": "Typescript",
         //   "value": "typescript"
         // }
-      ]
+      ],
+      default: defaults.language
     },
     // dependencies
     {
@@ -103,6 +106,7 @@ const create = (config) => {
           "value": "axios"
         }
       ],
+      default: defaults.dependencies,
       when: (answers) => {
         return answers.language === 'typescript' || answers.language === 'javascript';
       }
@@ -110,12 +114,14 @@ const create = (config) => {
     {
       "type": "input",
       "message": "Add your token (leave empty to skip):",
-      "name": "token"
+      "name": "token",
+      default: defaults.token
     },
     {
       "type": "input",
       "message": "Add your Signing Secret (leave empty to skip):",
-      "name": "signing_secret"
+      "name": "signing_secret",
+      default: defaults.signing_secret
     }
   ];
 }
