@@ -66,7 +66,7 @@ const getDefaultOptions = async (argv) => {
 
   const defaults = {}
   options.forEach(option => {
-    if(program[option.argument]) {
+    if (program[option.argument]) {
       defaults[option.argument] = option.commaList ? program[option.argument].split(',') : program[option.argument]
     }
   })
@@ -74,37 +74,36 @@ const getDefaultOptions = async (argv) => {
   return defaults
 }
 
-const start = async (argv) => {  
+const start = async (argv) => {
 
-    let output = '';
-      output += ' ____   ____  _   _______ \n';
-      output += '|  _ \\ / __ \\| | |__   __|\n';
-      output += '| |_) | |  | | |    | |   \n';
-      output += '|  _ <| |  | | |    | |   \n';
-      output += '| |_) | |__| | |____| |   \n';
-      output += '|____/ \\____/|______|_|   \n';
-    console.log(output);
+  let output = '';
+  output += '   /|       ____   ____  _   _______ \n';
+  output += '  / |      |  _ \\ / __ \\| | |__   __|\n';
+  output += ' /__|___   | |_) | |  | | |    | |   \n';
+  output += '    |  /   |  _ <| |  | | |    | |   \n';
+  output += '    | /    | |_) | |__| | |____| |   \n';
+  output += '    |/     |____/ \\____/|______|_|   \n';
+  console.log(output);
 
-    const defaults = await getDefaultOptions(argv)
+  const defaults = await getDefaultOptions(argv)
 
-    const command = argv.length <= 2 ? 'help' : argv[2]
+  const command = argv.length <= 2 ? 'help' : argv[2]
 
-    if(!defaults.help) {
-      switch (command) {
-        case 'create':
-          commands.create(defaults)
-          break;
-        case 'help':
-          console.log('Usage: bolt-cli create\n')
-          console.log('Use bolt-cli -h or bolt-cli --help for additional options\n')
-          break;  
-        default:
-          commands.create(defaults)
-          break
+  if (!defaults.help) {
+    switch (command) {
+      case 'create':
+        commands.create(defaults)
+        break;
+      case 'help':
+        console.log('Usage: bolt-cli create\n')
+        console.log('Use bolt-cli -h or bolt-cli --help for additional options\n')
+        break;
+      default:
+        commands.create(defaults)
+        break
 
-      }
     }
+  }
 }
 
 start(process.argv)
- 
